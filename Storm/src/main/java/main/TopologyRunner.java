@@ -1,11 +1,10 @@
 package main;
 
-import bolts.CampaignCountRegisterBolt;
-import bolts.CountTumbleBolt;
+import bolts.ObdCallBolt;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.topology.TopologyBuilder;
-import org.apache.storm.topology.base.BaseWindowedBolt;
+import org.apache.storm.topology.base.BaseWindowedBolt.Count;
 import spout.CampaignSpout;
 
 import java.io.BufferedReader;
@@ -26,12 +25,15 @@ public class TopologyRunner {
 
         TopologyBuilder topologyBuilder = new TopologyBuilder();
         topologyBuilder.setSpout("campaign_spout",new CampaignSpout(zkConnString,topic).getSpout());
-        topologyBuilder.setBolt("tumble_count_bolt",new CountTumbleBolt().
-                withTumblingWindow(BaseWindowedBolt.Count.of(10))).shuffleGrouping("campaign_spout");
-        topologyBuilder.setBolt("campaign_register_bolt", new CampaignCountRegisterBolt()).shuffleGrouping("campaign_spout");
+        //topologyBuilder.setBolt("tumble_count_bolt",new CountTumbleBolt().
+          //      withTumblingWindow(Count.of(10))).shuffleGrouping("campaign_spout");
+        //topologyBuilder.setBolt("campaign_register_bolt", new CampaignCountRegisterBolt()).shuffleGrouping("campaign_spout");
+        topologyBuilder.setBolt("obdCallBolt", new ObdCallBolt().withTumblingWindow(Count.of(5))).shuffleGrouping("campaign_spout");
+
 
         LocalCluster localCluster = new LocalCluster();
         config.setNumWorkers(1);
+        //config.registerSerialization(ObdCall.class);
 
         localCluster.submitTopology("campaign_topology", config, topologyBuilder.createTopology());
 

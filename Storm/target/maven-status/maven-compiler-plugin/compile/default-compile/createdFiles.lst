@@ -1,4 +1,7 @@
-spout/CampaignSpout.class
+pojos/ObdCall.class
+bolts/ObdCallBolt.class
 bolts/CampaignCountRegisterBolt.class
 main/TopologyRunner.class
+bolts/CampaignAttemptStatusRegisterBolt.class
+spout/CampaignSpout.class
 bolts/CountTumbleBolt.class
