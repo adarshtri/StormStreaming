@@ -52,7 +52,7 @@ public class  ObdCallBolt extends BaseWindowedBolt {
         for(Tuple tuple : tupleWindow.get()){
 
             String obd_call_string = tuple.getString(0);
-            String[] obd = obd_call_string.split("\t");
+            String[] obd = obd_call_string.split("    ");
             ObdCall obdCall = new ObdCall(obd[0],obd[1],obd[2],obd[3]);
             obdCalls.add(obdCall);
         }
