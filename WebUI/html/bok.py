@@ -31,9 +31,16 @@ db_connection.commit()
 
 def update_data():
     #db_connection1 = sql.connect(host='localhost', database='kafkastormtest', user='root', password='720354M@noj')
-    data1 = pd.read_sql(con=db_connection, sql='''select campaign_id as c_id,
-    case status when 0 then "Answered" when 201 then "Busy" when 200 then "Network Issue" else "Unknown" end as call_status,
-    sum(count) as cnt from elm_campaign_summary group by 1,2
+    data1 = pd.read_sql(con=db_connection, sql='''select c.name as c_id,     
+                                                    case status 
+                                                        when 0 then "Answered" 
+                                                        when 201 then "Busy" 
+                                                        when 200 then "Network Issue" 
+                                                        else "Unknown" end as call_status,
+                                                        sum(count) as cnt from 
+                                                        elm_campaign_summary ecs, 
+                                                        campaigns c where c.id=ecs.campaign_id 
+                                                        group by 1,2
     ''')
     db_connection.commit()
     print(data1)
